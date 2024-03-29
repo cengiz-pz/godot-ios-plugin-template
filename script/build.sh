@@ -316,7 +316,10 @@ done
 
 if ! [[ " ${supported_godot_versions[*]} " =~ [[:space:]]${GODOT_VERSION}[[:space:]] ]]
 then
-	if [[ "$ignore_unsupported_godot_version" == true ]]
+	if [[ "$do_download_godot" == false ]]
+	then
+		display_warning "Warning: Godot version not specified. Will look for existing download."
+	elif [[ "$ignore_unsupported_godot_version" == true ]]
 	then
 		display_warning "Warning: Godot version '$GODOT_VERSION' is not supported. Supported versions are [${supported_godot_versions[*]}]."
 	else
