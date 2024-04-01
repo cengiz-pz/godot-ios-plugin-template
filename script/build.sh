@@ -8,6 +8,7 @@ supported_godot_versions=("4.0" "4.1" "4.2")
 BUILD_TIMEOUT=40	# increase this value using -t option if device is not able to generate all headers before godot build is killed
 
 do_clean=false
+do_remove_pod_trunk=false
 do_remove_godot=false
 do_download_godot=false
 do_generate_headers=false
@@ -25,7 +26,7 @@ function display_help()
 	./script/echocolor.sh -y "If plugin version is not set with the -z option, then Godot version will be used."
 	echo
 	./script/echocolor.sh -Y "Syntax:"
-	./script/echocolor.sh -y "	$0 [-a|A <godot version>|c|g|G <godot version>|h|H|i|t <timeout>|z]"
+	./script/echocolor.sh -y "	$0 [-a|A <godot version>|c|g|G <godot version>|h|H|i|p|t <timeout>|z]"
 	echo
 	./script/echocolor.sh -Y "Options:"
 	./script/echocolor.sh -y "	a	generate godot headers, build plugin, and create zip archive"
@@ -39,6 +40,7 @@ function display_help()
 	./script/echocolor.sh -y "	h	display usage information"
 	./script/echocolor.sh -y "	H	generate godot headers"
 	./script/echocolor.sh -y "	i	ignore if an unsupported godot version selected and continue"
+	./script/echocolor.sh -y "	p	remove pods and pod repo trunk"
 	./script/echocolor.sh -y "	t	change timeout value for godot build"
 	./script/echocolor.sh -y "	z	create zip archive"
 	echo
@@ -46,6 +48,9 @@ function display_help()
 	./script/echocolor.sh -y "	* clean existing build, remove godot, and rebuild all"
 	./script/echocolor.sh -y "	   $> $0 -cgA 4.2"
 	./script/echocolor.sh -y "	   $> $0 -cgG 4.2 -Hbz"
+	echo
+	./script/echocolor.sh -y "	* clean existing build, remove pods and pod repo trunk, and rebuild plugin"
+	./script/echocolor.sh -y "	   $> $0 -cpb"
 	echo
 	./script/echocolor.sh -y "	* clean existing build and rebuild plugin"
 	./script/echocolor.sh -y "	   $> $0 -ca"
@@ -72,13 +77,17 @@ function display_status()
 
 function display_warning()
 {
+	echo
 	./script/echocolor.sh -y "$1"
+	echo
 }
 
 
 function display_error()
 {
+	echo
 	./script/echocolor.sh -r "$1"
+	echo
 }
 
 
@@ -100,7 +109,13 @@ function clean_plugin_build()
 	rm -rf ./bin/*
 	find . -name "*.d" -type f -delete
 	find . -name "*.o" -type f -delete
+}
+
+
+function remove_pod_repo_trunk()
+{
 	rm -rf ./Pods/
+	pod repo remove trunk
 }
 
 
@@ -251,7 +266,7 @@ function create_zip_archive()
 }
 
 
-while getopts "aA:bcgG:hHit:z:" option; do
+while getopts "aA:bcgG:hHipt:z:" option; do
 	case $option in
 		h)
 			display_help
@@ -286,6 +301,9 @@ while getopts "aA:bcgG:hHit:z:" option; do
 			;;
 		i)
 			ignore_unsupported_godot_version=true
+			;;
+		p)
+			do_remove_pod_trunk=true
 			;;
 		t)
 			regex='^[0-9]+$'
@@ -331,6 +349,11 @@ fi
 if [[ "$do_clean" == true ]]
 then
 	clean_plugin_build
+fi
+
+if [[ "$do_remove_pod_trunk" == true ]]
+then
+	remove_pod_repo_trunk
 fi
 
 if [[ "$do_remove_godot" == true ]]

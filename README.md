@@ -40,3 +40,23 @@ ___
 # Libraries
 
 Library archives will be created in the `bin/release` directory.
+
+Note: make sure to use `[plugin_name].debug.a` when exporting with `Export With Debug` checkbox checked and use `[plugin_name].release.a` otherwise.  Linker errors may occur if the wrong file is used.
+
+___
+
+# Troubleshooting
+
+If you add third-party dependencies to your Podfile and encounter the following error:
+
+```
+[!] CDN: trunk URL couldn't be downloaded: https://[dependency-url].podspec.json Response: Failure when receiving data from the peer
+```
+
+Running the build script with the -p option may solve the issue by removing pod repository trunk before building plugin.
+
+`./script/build.sh -cpb`
+
+or
+
+`./script/build.sh -cpgA4.2`

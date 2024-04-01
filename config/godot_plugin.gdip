@@ -8,10 +8,12 @@ deinitialization="godot_plugin_deinit"
 [dependencies]
 linked=[]
 embedded=[]
-system=[]
+system=["Foundation.framework"]
 
 capabilities=[]
 
 files=[]
+
+linker_flags=["-ObjC"]
 
 [plist]

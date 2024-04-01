@@ -9,16 +9,16 @@
 #include "core/object/class_db.h"
 
 class GodotPlugin : public Object {
-    GDCLASS(GodotPlugin, Object);
-    
-    static void _bind_methods();
-    
+	GDCLASS(GodotPlugin, Object);
+	
+	static void _bind_methods();
+	
 public:
-    
-    Error foo();
-    
-    GodotPlugin();
-    ~GodotPlugin();
+	
+	Error foo();
+	
+	GodotPlugin();
+	~GodotPlugin();
 };
 
 #endif /* godot_plugin_implementation_h */

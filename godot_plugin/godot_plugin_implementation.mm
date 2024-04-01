@@ -1,5 +1,5 @@
 //
-//  godot_plugin_implementation.m
+//  godot_plugin_implementation.mm
 //
 
 #import <Foundation/Foundation.h>
@@ -8,19 +8,20 @@
 
 #import "godot_plugin_implementation.h"
 
+
 void GodotPlugin::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("foo"), &GodotPlugin::foo);
+	ClassDB::bind_method(D_METHOD("foo"), &GodotPlugin::foo);
 }
 
 Error GodotPlugin::foo() {
-    NSLog(@"foo");
-    return OK;
+	NSLog(@"foo");
+	return OK;
 }
 
 GodotPlugin::GodotPlugin() {
-    NSLog(@"initialize object");
+	NSLog(@"initialize object");
 }
 
 GodotPlugin::~GodotPlugin() {
-    NSLog(@"deinitialize object");
+	NSLog(@"deinitialize object");
 }
