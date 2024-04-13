@@ -47,6 +47,8 @@ ___
 
 # Troubleshooting
 
+## Podfile
+
 If you add third-party dependencies to your Podfile and encounter the following error:
 
 ```
@@ -60,3 +62,9 @@ Running the build script with the -p option may solve the issue by removing pod 
 or
 
 `./script/build.sh -cpgA4.2`
+
+## Build-time Errors
+
+If you are experiencing build-time errors, you may want to place the following snippet at the end of your SConstruct file to examine build-time environment (aka. construction environment) variables:
+
+`print (f'{env.Dump()}')`
