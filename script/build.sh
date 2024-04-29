@@ -266,15 +266,19 @@ function create_zip_archive()
 	tmp_directory="./bin/.tmp_zip_"
 	lib_directory="./bin/static_libraries"
 	config_directory="./config"
+	addon_directory="./addon"
 
 	if [[ -d "$tmp_directory" ]]
 	then
-		display_status "removıng exıstıng staging directory $tmp_directory"
+		display_status "removing existing staging directory $tmp_directory"
 		rm -r $tmp_directory
 	fi
 
-	mkdir -p $tmp_directory/addons/$plugin_name
-	cp -r ./addon/* $tmp_directory/addons/$plugin_name
+	if [[ -d "$addon_directory" ]]
+	then
+		mkdir -p $tmp_directory/addons/$plugin_name
+		cp -r $addon_directory/* $tmp_directory/addons/$plugin_name
+	fi
 
 	mkdir -p $tmp_directory/ios/framework
 	find ./Pods -iname '*.xcframework' -type d -exec cp -r {} $tmp_directory/ios/framework \;

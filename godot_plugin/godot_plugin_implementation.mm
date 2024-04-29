@@ -14,14 +14,14 @@ void GodotPlugin::_bind_methods() {
 }
 
 Error GodotPlugin::foo() {
-	NSLog(@"foo");
+	NSLog(@"GodotPlugin foo");
 	return OK;
 }
 
 GodotPlugin::GodotPlugin() {
-	NSLog(@"initialize object");
+	NSLog(@"GodotPlugin constructor");
 }
 
 GodotPlugin::~GodotPlugin() {
-	NSLog(@"deinitialize object");
+	NSLog(@"GodotPlugin destructor");
 }
