@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# © 2024-present https://github.com/cengiz-pz
+#
 set -e
 trap "sleep 1; echo" EXIT
 
@@ -27,7 +30,7 @@ function display_help()
 	./script/echocolor.sh -y "If plugin version is not set with the -z option, then Godot version will be used."
 	echo
 	./script/echocolor.sh -Y "Syntax:"
-	./script/echocolor.sh -y "	$0 [-a|A <godot version>|c|g|G <godot version>|h|H|i|p|P|t <timeout>|z]"
+	./script/echocolor.sh -y "	$0 [-a|A <godot version>|c|g|G <godot version>|h|H|i|p|P|t <timeout>|z <version>]"
 	echo
 	./script/echocolor.sh -Y "Options:"
 	./script/echocolor.sh -y "	a	generate godot headers, build plugin, and create zip archive"
@@ -44,19 +47,19 @@ function display_help()
 	./script/echocolor.sh -y "	p	remove pods and pod repo trunk"
 	./script/echocolor.sh -y "	P	install pods"
 	./script/echocolor.sh -y "	t	change timeout value for godot build"
-	./script/echocolor.sh -y "	z	create zip archive"
+	./script/echocolor.sh -y "	z	create zip archive with given version added to the file name"
 	echo
 	./script/echocolor.sh -Y "Examples:"
 	./script/echocolor.sh -y "	* clean existing build, remove godot, and rebuild all"
 	./script/echocolor.sh -y "	   $> $0 -cgA 4.2"
-	./script/echocolor.sh -y "	   $> $0 -cgpG 4.2 -HPbz"
+	./script/echocolor.sh -y "	   $> $0 -cgpG 4.2 -HPbz 1.0"
 	echo
 	./script/echocolor.sh -y "	* clean existing build, remove pods and pod repo trunk, and rebuild plugin"
 	./script/echocolor.sh -y "	   $> $0 -cpPb"
 	echo
 	./script/echocolor.sh -y "	* clean existing build and rebuild plugin"
 	./script/echocolor.sh -y "	   $> $0 -ca"
-	./script/echocolor.sh -y "	   $> $0 -cHbz"
+	./script/echocolor.sh -y "	   $> $0 -cHbz 1.0"
 	echo
 	./script/echocolor.sh -y "	* clean existing build and rebuild plugin with custom plugin version"
 	./script/echocolor.sh -y "	   $> $0 -cHbz 1.0"
@@ -176,15 +179,14 @@ function generate_static_library()
 	TARGET_TYPE="$1"
 	LIB_DIRECTORY="$2"
 
+	display_status "generating static libraries for $plugin_name with target type $TARGET_TYPE..."
+
 	# ARM64 Device
 	scons target=$TARGET_TYPE arch=arm64 target_name=$plugin_name version=$GODOT_VERSION
 	# ARM7 Device
 	scons target=$TARGET_TYPE arch=armv7 target_name=$plugin_name version=$GODOT_VERSION
 	# x86_64 Simulator
 	scons target=$TARGET_TYPE arch=x86_64 simulator=yes target_name=$plugin_name version=$GODOT_VERSION
-
-
-	display_status "generating static libraries for $plugin_name with target type $TARGET_TYPE..."
 
 	# Creating fat library for device and simulator
 	lipo -create "$lib_directory/lib$plugin_name.x86_64-simulator.$TARGET_TYPE.a" \
@@ -288,7 +290,7 @@ function create_zip_archive()
 	cp $lib_directory/$plugin_name.{release,debug}.a $tmp_directory/ios/plugins
 
 	display_status "creating $file_name file..."
-	cd $tmp_directory; zip -r ../release/$file_name ./*; cd -
+	cd $tmp_directory; zip -yr ../release/$file_name ./*; cd -
 
 	rm -rf $tmp_directory
 }

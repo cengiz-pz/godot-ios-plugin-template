@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# © 2024-present https://github.com/cengiz-pz
+#
 
 function display_help()
 {
